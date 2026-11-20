@@ -1,0 +1,7 @@
+First download the extension Angular Language Services 
+Check the version of node.js you have using: node -v
+Check the version on npm you have using: npm -v
+Install angular: npm install -g @angular/cli
+Run the app: 
+- check that you are inside the app folder if not then: cd app
+- then use: ng serve --open
