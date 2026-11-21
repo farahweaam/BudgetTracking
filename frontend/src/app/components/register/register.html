@@ -1,0 +1,236 @@
+
+<div class="register-page">
+
+  <div class="register-heading">
+    <h1>Start your next chapter.</h1>
+    <p>A calmer relationship with money starts here.</p>
+  </div>
+
+  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+
+    <!-- Full Name -->
+    <div class="form-group">
+      <label for="fullName">Full name</label>
+
+      <input
+        id="fullName"
+        type="text"
+        formControlName="fullName"
+        placeholder="Enter your full name"
+      />
+
+      <small class="error-message"
+        *ngIf="f['fullName'].touched && f['fullName'].hasError('required')">
+        Full name is required.
+      </small>
+
+      <small class="error-message"
+        *ngIf="f['fullName'].touched && f['fullName'].hasError('minlength')">
+        Name must contain at least 2 characters.
+      </small>
+    </div>
+
+    <!-- Email -->
+    <div class="form-group">
+      <label for="email">Email address</label>
+
+      <input
+        id="email"
+        type="email"
+        formControlName="email"
+        placeholder="Enter your email address"
+      />
+
+      <small class="error-message"
+        *ngIf="f['email'].touched && f['email'].hasError('required')">
+        Email address is required.
+      </small>
+
+      <small class="error-message"
+        *ngIf="f['email'].touched && f['email'].hasError('email')">
+        Please enter a valid email address.
+      </small>
+    </div>
+
+    <!-- Password -->
+    <div class="form-group">
+      <label for="password">Password</label>
+
+      <input
+        id="password"
+        type="password"
+        formControlName="password"
+        placeholder="Enter your password"
+      />
+
+      <small class="error-message"
+        *ngIf="f['password'].touched && f['password'].hasError('required')">
+        Password is required.
+      </small>
+
+      <small class="error-message"
+        *ngIf="f['password'].touched && f['password'].hasError('minlength')">
+        Password must contain at least 8 characters.
+      </small>
+    </div>
+
+    <!-- Confirm Password -->
+    <div class="form-group">
+      <label for="confirmPassword">Confirm password</label>
+
+      <input
+        id="confirmPassword"
+        type="password"
+        formControlName="confirmPassword"
+        placeholder="Re-enter your password"
+      />
+
+      <small class="error-message"
+        *ngIf="f['confirmPassword'].touched && f['confirmPassword'].hasError('required')">
+        Please confirm your password.
+      </small>
+
+      <small class="error-message"
+        *ngIf="f['confirmPassword'].touched && registerForm.hasError('passwordMismatch')">
+        Passwords do not match.
+      </small>
+    </div>
+
+    <!-- Terms -->
+    <div class="terms-section">
+
+  <label class="terms-label">
+    <input type="checkbox" formControlName="terms" />
+
+    <span>
+      By continuing, you agree to our
+      <a href="#" (click)="openPolicy('terms'); $event.preventDefault()">
+        Terms
+      </a>
+      and
+      <a href="#" (click)="openPolicy('privacy'); $event.preventDefault()">
+        Privacy Policy
+      </a>.
+    </span>
+  </label>
+
+  <small class="error-message"
+    *ngIf="f['terms'].touched && f['terms'].invalid">
+    You must accept the Terms and Privacy Policy.
+  </small>
+
+</div>
+
+<div class="success-message" *ngIf="successMessage">
+  {{ successMessage }}
+</div>
+
+<div class="error-message" *ngIf="errorMessage">
+  {{ errorMessage }}
+</div>
+
+    <!-- Submit -->
+    <button
+  type="submit"
+  class="register-button"
+  [disabled]="loading">
+
+  {{ loading ? 'Creating account...' : 'Create account' }}
+
+</button>
+
+  </form>
+
+  <!-- Login link -->
+  <div class="login-link">
+    Already have an account?
+
+    <a routerLink="/login">
+      Log in →
+    </a>
+  </div>
+  <!-- Policy Modal -->
+<div class="policy-overlay"
+     *ngIf="activePolicy"
+     (click)="closePolicy()">
+
+  <div class="policy-modal"
+       role="dialog"
+       aria-modal="true"
+       (click)="$event.stopPropagation()">
+
+    <button
+      type="button"
+      class="policy-close"
+      (click)="closePolicy()">
+      ×
+    </button>
+
+    <h2>
+      {{ activePolicy === 'terms' ? 'Terms and Conditions' : 'Privacy Policy' }}
+    </h2>
+
+    <div *ngIf="activePolicy === 'terms'" class="policy-content">
+      <h3>Welcome to Penny</h3>
+      <p>
+        Penny is a budget tracking platform designed to help users
+        manage income, expenses, budgets and savings goals.
+      </p>
+
+      <h3>Using the platform</h3>
+      <p>
+        You are responsible for providing accurate account information
+        and keeping your login credentials secure.
+      </p>
+
+      <h3>Account responsibility</h3>
+      <p>
+        You are responsible for activity performed through your account.
+        Please notify the project team if you suspect unauthorized access.
+      </p>
+
+      <h3>Service limitations</h3>
+      <p>
+        Penny is a personal budgeting tool and does not provide
+        professional financial or investment advice.
+      </p>
+    </div>
+
+    <div *ngIf="activePolicy === 'privacy'" class="policy-content">
+      <h3>Information we collect</h3>
+      <p>
+        Penny may process your name, email address and the financial
+        information you choose to enter into the platform.
+      </p>
+
+      <h3>How information is used</h3>
+      <p>
+        Your information is used to provide account access and
+        budget tracking features.
+      </p>
+
+      <h3>Data security</h3>
+      <p>
+        Authentication is handled through Firebase Authentication.
+        Access to user data should be protected by appropriate
+        security rules and access controls.
+      </p>
+
+      <h3>Your choices</h3>
+      <p>
+        You should be able to request information about your data
+        and ask for account deletion through the project's support process.
+      </p>
+    </div>
+
+    <button
+      type="button"
+      class="policy-done"
+      (click)="closePolicy()">
+      Close
+    </button>
+
+  </div>
+</div>
+
+</div>
