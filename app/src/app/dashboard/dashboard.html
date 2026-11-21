@@ -1,0 +1,53 @@
+<section class="dashboard page">
+  <h2>Dashboard</h2>
+
+  @if (hasBudget()) {
+    <p>Showing {{ month() | date: 'MMMM y' }}</p>
+  } @else {
+    <p>No budget yet. Create one on the budget page to see your charts.</p>
+  }
+
+  <div class="stats">
+    <div class="stat">
+      <span>Income</span>
+      <strong>{{ summary().income | currency }}</strong>
+    </div>
+    <div class="stat">
+      <span>Budgeted</span>
+      <strong>{{ summary().allocated | currency }}</strong>
+    </div>
+    <div class="stat" [class.over]="summary().spent > summary().allocated">
+      <span>Spent</span>
+      <strong>{{ summary().spent | currency }}</strong>
+    </div>
+    <div class="stat">
+      <span>Goals saved</span>
+      <strong>{{ summary().savedPct | percent }}</strong>
+    </div>
+  </div>
+
+ <div class="chart-grid">
+  <div class="chart-card">
+    <div class="card-header">
+      <h3>Budget by category</h3>
+      <a class="card-btn" routerLink="/budget">
+        {{ hasBudget() ? 'Edit budget' : 'Create budget' }}
+      </a>
+    </div>
+    <div class="chart-box"><canvas #categoryChart></canvas></div>
+  </div>
+
+  <div class="chart-card">
+    <h3>Budget vs spending</h3>
+    <div class="chart-box"><canvas #varianceChart></canvas></div>
+  </div>
+
+  <div class="chart-card wide">
+    <div class="card-header">
+      <h3>Savings goals</h3>
+      <a class="card-btn" routerLink="/goals">Manage goals</a>
+    </div>
+    <div class="chart-box"><canvas #goalsChart></canvas></div>
+  </div>
+</div>
+</section>

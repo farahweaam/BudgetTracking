@@ -36,7 +36,7 @@
     <button type="button" (click)="addCategory()">+ Add category</button>
 
     <p class="summary" [class.over]="remaining < 0">
-      Allocated: {{ totalLimits | currency }} Â· Remaining: {{ remaining | currency }}
+      Allocated: {{ totalLimits | currency }} · Remaining: {{ remaining | currency }}
     </p>
     @if (form.errors?.['overBudget']) {
       <small class="err">Category limits exceed your income.</small>
@@ -67,7 +67,7 @@
         </div>
       </article>
     } @empty {
-      <p>No budgets yet. Create your first one above.</p>
+      <p>No budgets yet,Create your first one above.</p>
     }
   </div>
 </section>

@@ -9,9 +9,10 @@ import { App } from './app';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Goals } from './goals/goals';
 import { BudgetForm } from './budget-form/budget-form';
+import { Dashboard } from './dashboard/dashboard';
 
 @NgModule({
-  declarations: [App, Goals, BudgetForm],
+  declarations: [App, Goals, BudgetForm, Dashboard],
   imports: [BrowserModule, AppRoutingModule, ReactiveFormsModule],
   providers: [
     provideBrowserGlobalErrorListeners(),

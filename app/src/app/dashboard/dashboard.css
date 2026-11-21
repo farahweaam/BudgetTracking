@@ -1,0 +1,29 @@
+
+
+.card-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: inline-flex;
+  align-items: center;
+  height: 32px;
+  padding: 0 14px;
+  border-radius: 9px;
+  background: #204c3e;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+}
+
+.card-btn:hover {
+  background: #183d31;
+}
+.chart-card {
+  position: relative;      
+  border: 1px solid #e0e4e1;
+  border-radius: 12px;
+  padding: 20px;
+  background: #ffffff;
+}
