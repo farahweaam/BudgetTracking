@@ -1,0 +1,119 @@
+
+<div class="login-page">
+
+  <div class="login-heading">
+    <h1>Welcome back.</h1>
+    <p>A clear view of your money is one sign-in away.</p>
+  </div>
+
+
+
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+
+    <!-- Email -->
+    <div class="form-group">
+
+      <label for="loginEmail">Email address</label>
+
+      <input
+        id="loginEmail"
+        type="email"
+        formControlName="email"
+        placeholder="Enter your email address"
+      />
+
+      <small class="error-message"
+        *ngIf="f['email'].touched && f['email'].hasError('required')">
+        Email address is required.
+      </small>
+
+      <small class="error-message"
+        *ngIf="f['email'].touched && f['email'].hasError('email')">
+        Please enter a valid email address.
+      </small>
+
+    </div>
+
+    <!-- Password -->
+    <div class="form-group">
+
+      <label for="loginPassword">Password</label>
+
+      <div class="password-wrapper">
+
+        <input
+          id="loginPassword"
+          [type]="showPassword ? 'text' : 'password'"
+          formControlName="password"
+          placeholder="Enter your password"
+        />
+
+        <button
+          type="button"
+          class="password-toggle"
+          (click)="togglePassword()">
+          {{ showPassword ? 'Hide' : 'Show' }}
+        </button>
+
+      </div>
+
+      <small class="error-message"
+        *ngIf="f['password'].touched && f['password'].hasError('required')">
+        Password is required.
+      </small>
+
+      <small class="error-message"
+        *ngIf="f['password'].touched && f['password'].hasError('minlength')">
+        Password must contain at least 8 characters.
+      </small>
+
+    </div>
+
+    <!-- Remember me -->
+    <div class="login-options">
+
+      <label class="remember-me">
+  <input
+    type="checkbox"
+    formControlName="rememberMe"
+  />
+  <span>Remember me</span>
+</label>
+
+      <a routerLink="/forgot-password">
+        Forgot password?
+      </a>
+
+    </div>
+
+
+    <div class="success-message" *ngIf="successMessage">
+  {{ successMessage }}
+</div>
+
+<div class="error-message" *ngIf="errorMessage">
+  {{ errorMessage }}
+</div>
+
+    <!-- Submit -->
+    <button
+  type="submit"
+  class="login-button"
+  [disabled]="loading">
+
+  {{ loading ? 'logging in...' : 'log in' }}
+
+</button>
+
+  </form>
+
+  <!-- Registration link -->
+  <div class="register-link">
+    New to penny?
+
+    <a routerLink="/register">
+      Create an account →
+    </a>
+  </div>
+
+</div>
