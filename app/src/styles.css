@@ -1,1 +1,141 @@
-/* You can add global styles to this file, and also import other style files */
+/* ===== Shared page styles (goals, budget, future pages) ===== */
+.page {
+  width: 100%;
+  max-width: 640px;
+  margin: 40px auto;
+  padding: 0 16px;
+  box-sizing: border-box;
+  color: #204c3e;
+}
+
+.page h2 {
+  font-size: 34px;
+  font-weight: 500;
+  letter-spacing: -1px;
+  margin: 0 0 32px;
+  color: #204c3e;
+}
+
+.page h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 8px;
+  color: #204c3e;
+}
+
+.page p,
+.page small,
+.page li {
+  font-size: 14px;
+  color: #858d89;
+}
+
+.page ul {
+  margin: 8px 0 16px;
+  padding-left: 18px;
+}
+
+/* Forms */
+.page form {
+  display: grid;
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
+.page label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: #204c3e;
+}
+
+.page input {
+  width: 100%;
+  height: 50px;
+  padding: 0 15px;
+  border: 1px solid #e0e4e1;
+  border-radius: 9px;
+  outline: none;
+  box-sizing: border-box;
+  font-size: 14px;
+  color: #204c3e;
+  background: #ffffff;
+}
+
+.page label input {
+  margin-top: 10px;
+}
+
+.page input:focus {
+  border-color: #204c3e;
+  box-shadow: 0 0 0 2px rgba(32, 76, 62, 0.08);
+}
+
+.page input::placeholder {
+  color: #a1aaa5;
+}
+
+/* Buttons: outlined by default, filled green for submit */
+.page button {
+  height: 44px;
+  padding: 0 20px;
+  border: 1px solid #e0e4e1;
+  border-radius: 9px;
+  background: #ffffff;
+  color: #204c3e;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.page button:hover {
+  background: #f3f6f4;
+}
+
+.page button[type="submit"] {
+  background: #204c3e;
+  border-color: #204c3e;
+  color: #ffffff;
+}
+
+.page button[type="submit"]:hover {
+  background: #183d31;
+}
+
+.page button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.page .actions {
+  display: flex;
+  gap: 12px;
+}
+
+/* Errors */
+.page .err {
+  display: block;
+  margin-top: 6px;
+  font-size: 12px;
+  font-weight: 400;
+  color: #c74747;
+}
+
+.page p.err {
+  background: #fff0f0;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  margin: 0;
+}
+
+/* Cards */
+.page .goal-card,
+.page .budget-card {
+  border: 1px solid #e0e4e1;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
+  background: #ffffff;
+}/* You can add global styles to this file, and also import other style files */

@@ -1,0 +1,72 @@
+<section class="goals page">
+  <h2>Financial Goals</h2>
+
+  <form [formGroup]="form" (ngSubmit)="save()" class="goal-form">
+    <label>
+      Goal name
+      <input type="text" formControlName="name" placeholder="e.g. Summer vacation" />
+      @if (f.name.touched && f.name.errors) {
+        <small class="err">
+          @if (f.name.errors['required']) { Name is required. }
+          @else if (f.name.errors['minlength']) { At least 3 characters. }
+        </small>
+      }
+    </label>
+
+    <label>
+      Target amount
+      <input type="number" formControlName="targetAmount" />
+      @if (f.targetAmount.touched && f.targetAmount.errors) {
+        <small class="err">Target must be at least 1.</small>
+      }
+    </label>
+
+    <label>
+      Saved so far
+      <input type="number" formControlName="currentAmount" />
+      @if (f.currentAmount.touched && f.currentAmount.errors) {
+        <small class="err">Cannot be negative.</small>
+      }
+    </label>
+
+    <label>
+      Deadline
+      <input type="date" formControlName="deadline" />
+      @if (f.deadline.touched && f.deadline.errors) {
+        <small class="err">
+          @if (f.deadline.errors['required']) { Pick a deadline. }
+          @else if (f.deadline.errors['pastDate']) { Deadline must be in the future. }
+        </small>
+      }
+    </label>
+
+    <div class="actions">
+      <button type="submit" [disabled]="form.invalid">
+        {{ editingId ? 'Update goal' : 'Add goal' }}
+      </button>
+      @if (editingId) { <button type="button" (click)="reset()">Cancel</button> }
+    </div>
+    @if (errorMsg) { <p class="err">{{ errorMsg }}</p> }
+  </form>
+
+  <div class="goal-list">
+    
+  @for (g of goals$ | async; track g.id) {
+    <article class="goal-card">
+      <h3>{{ g.name }}</h3>
+      <p>
+        {{ g.currentAmount | currency }} of {{ g.targetAmount | currency }}
+        · due {{ g.deadline | date: 'mediumDate' }}
+      </p>
+      <div class="bar"><div class="fill" [style.width.%]="progress(g)"></div></div>
+      <small>{{ progress(g) }}% complete</small>
+      <div class="actions">
+        <button (click)="edit(g)">Edit</button>
+        <button (click)="remove(g)">Delete</button>
+      </div>
+    </article>
+  } @empty {
+    <p>No goals yet. Add your first one above.</p>
+  }
+</div>
+</section>
