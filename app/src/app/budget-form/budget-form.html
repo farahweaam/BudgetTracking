@@ -1,0 +1,73 @@
+<section class="budget page">
+  <h2>Monthly Budget</h2>
+
+  <form [formGroup]="form" (ngSubmit)="save()" class="budget-form">
+    <label>
+      Month
+      <input type="month" formControlName="month" />
+      @if (f.month.touched && f.month.errors) {
+        <small class="err">Pick a month.</small>
+      }
+    </label>
+
+    <label>
+      Total income
+      <input type="number" formControlName="totalIncome" />
+      @if (f.totalIncome.touched && f.totalIncome.errors) {
+        <small class="err">Income must be at least 1.</small>
+      }
+    </label>
+
+    <h3>Categories</h3>
+    <div formArrayName="categories">
+      @for (c of categories.controls; track $index; let i = $index) {
+        <div class="cat-row" [formGroupName]="i">
+          <input type="text" formControlName="name" placeholder="Category (e.g. Food)" />
+          <input type="number" formControlName="limit" placeholder="Limit" />
+          <button type="button" (click)="removeCategory(i)" [disabled]="categories.length === 1">
+            Remove
+          </button>
+        </div>
+        @if (c.touched && c.invalid) {
+          <small class="err">Each category needs a name (2+ characters) and a non-negative limit.</small>
+        }
+      }
+    </div>
+    <button type="button" (click)="addCategory()">+ Add category</button>
+
+    <p class="summary" [class.over]="remaining < 0">
+      Allocated: {{ totalLimits | currency }} Â· Remaining: {{ remaining | currency }}
+    </p>
+    @if (form.errors?.['overBudget']) {
+      <small class="err">Category limits exceed your income.</small>
+    }
+
+    <div class="actions">
+      <button type="submit" [disabled]="form.invalid">
+        {{ editingId ? 'Update budget' : 'Save budget' }}
+      </button>
+      @if (editingId) { <button type="button" (click)="reset()">Cancel</button> }
+    </div>
+    @if (errorMsg) { <p class="err">{{ errorMsg }}</p> }
+  </form>
+
+  <div class="budget-list">
+    @for (b of budgets$ | async; track b.id) {
+      <article class="budget-card">
+        <h3>{{ b.month | date: 'MMMM y' }}</h3>
+        <p>Income: {{ b.totalIncome | currency }}</p>
+        <ul>
+          @for (c of b.categories; track $index) {
+            <li>{{ c.name }}: {{ c.limit | currency }}</li>
+          }
+        </ul>
+        <div class="actions">
+          <button (click)="edit(b)">Edit</button>
+          <button (click)="remove(b)">Delete</button>
+        </div>
+      </article>
+    } @empty {
+      <p>No budgets yet. Create your first one above.</p>
+    }
+  </div>
+</section>

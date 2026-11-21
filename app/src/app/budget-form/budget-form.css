@@ -1,0 +1,20 @@
+.cat-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr auto;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.cat-row button {
+  height: 50px;
+}
+
+.summary {
+  font-size: 14px;
+  font-weight: 600;
+  color: #204c3e;
+}
+
+.summary.over {
+  color: #c74747;
+}

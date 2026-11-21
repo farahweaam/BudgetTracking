@@ -8,10 +8,11 @@ import { AppRoutingModule } from './app-routing-module';
 import { App } from './app';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Goals } from './goals/goals';
+import { BudgetForm } from './budget-form/budget-form';
 
 @NgModule({
-  declarations: [App, Goals],
-  imports: [BrowserModule, AppRoutingModule,ReactiveFormsModule],
+  declarations: [App, Goals, BudgetForm],
+  imports: [BrowserModule, AppRoutingModule, ReactiveFormsModule],
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideFirebaseApp(() => initializeApp(environment.firebase)),
