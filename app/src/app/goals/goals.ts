@@ -3,7 +3,7 @@ import { FormBuilder, Validators, AbstractControl, ValidationErrors } from '@ang
 import { Observable } from 'rxjs';
 import { Goal } from '../models/goal';
 import { GoalService } from '../services/goal';
-
+import { Router } from '@angular/router';
 function futureDate(c: AbstractControl): ValidationErrors | null {
   if (!c.value) return null;
   const today = new Date().toISOString().slice(0, 10);
@@ -19,6 +19,7 @@ function futureDate(c: AbstractControl): ValidationErrors | null {
 export class Goals implements OnInit {
   private fb = inject(FormBuilder);
   private goalService = inject(GoalService);
+private router = inject(Router);
 
   goals$!: Observable<Goal[]>;
   editingId: string | null = null;
@@ -53,6 +54,7 @@ export class Goals implements OnInit {
         await this.goalService.addGoal(value);
       }
       this.reset();
+      this.router.navigate(['/dashboard']);
     } catch (e: any) {
       this.errorMsg = e.message ?? 'Something went wrong';
     }

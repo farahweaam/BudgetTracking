@@ -1,0 +1,13 @@
+@if (visible()) {
+  <nav class="navbar">
+    <span class="brand">Penny</span>
+
+    <div class="links">
+      <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+      <a routerLink="/budget" routerLinkActive="active">Budget</a>
+      <a routerLink="/goals" routerLinkActive="active">Goals</a>
+    </div>
+
+    <button type="button" class="logout" (click)="logout()">Log out</button>
+  </nav>
+}

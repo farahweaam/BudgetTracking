@@ -1,31 +1,46 @@
-import { Injectable, inject } from '@angular/core';
-import { Auth } from '@angular/fire/auth';
+import { Injectable, NgZone, inject } from '@angular/core';
 import {
-  Firestore, collection, collectionData, addDoc,
-  doc, updateDoc, deleteDoc, query, orderBy
-} from '@angular/fire/firestore';
+  collection, addDoc, doc, updateDoc, deleteDoc,
+  query, orderBy, onSnapshot
+} from 'firebase/firestore';
 import { Observable } from 'rxjs';
+import { firebaseAuth, db } from '../firebase.config';
 import { Goal } from '../models/goal';
 
 @Injectable({ providedIn: 'root' })
 export class GoalService {
-  private fs = inject(Firestore);
-  private auth = inject(Auth);
+  private zone = inject(NgZone);
 
   private get uid(): string {
-    const user = this.auth.currentUser;
+    const user = firebaseAuth.currentUser;
     if (!user) throw new Error('Not logged in');
     return user.uid;
   }
 
   private col() {
-    return collection(this.fs, `users/${this.uid}/goals`);
+    return collection(db, `users/${this.uid}/goals`);
   }
 
   getGoals(): Observable<Goal[]> {
-    return collectionData(query(this.col(), orderBy('createdAt', 'desc')), {
-      idField: 'id',
-    }) as Observable<Goal[]>;
+    return new Observable<Goal[]>((sub) => {
+      let unsub: () => void = () => {};
+      let closed = false;
+
+      firebaseAuth.authStateReady().then(() => {
+        if (closed) return;
+        const q = query(this.col(), orderBy('createdAt', 'desc'));
+        unsub = onSnapshot(
+          q,
+          (snap) =>
+            this.zone.run(() =>
+              sub.next(snap.docs.map((d) => ({ id: d.id, ...d.data() }) as Goal))
+            ),
+          (err) => this.zone.run(() => sub.error(err))
+        );
+      }).catch((err) => sub.error(err));
+
+      return () => { closed = true; unsub(); };
+    });
   }
 
   addGoal(goal: Goal) {
@@ -33,10 +48,10 @@ export class GoalService {
   }
 
   updateGoal(id: string, changes: Partial<Goal>) {
-    return updateDoc(doc(this.fs, `users/${this.uid}/goals/${id}`), changes);
+    return updateDoc(doc(db, `users/${this.uid}/goals/${id}`), changes);
   }
 
   deleteGoal(id: string) {
-    return deleteDoc(doc(this.fs, `users/${this.uid}/goals/${id}`));
+    return deleteDoc(doc(db, `users/${this.uid}/goals/${id}`));
   }
 }

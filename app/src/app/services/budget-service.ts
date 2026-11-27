@@ -1,31 +1,46 @@
-import { Injectable, inject } from '@angular/core';
-import { Auth } from '@angular/fire/auth';
-import {
-  Firestore, collection, collectionData, addDoc,
-  doc, updateDoc, deleteDoc, query, orderBy
-} from '@angular/fire/firestore';
+import { Injectable, NgZone, inject } from '@angular/core';
 import { Observable } from 'rxjs';
+import {
+  collection, addDoc, doc, updateDoc, deleteDoc,
+  query, orderBy, onSnapshot
+} from 'firebase/firestore';
+import { firebaseAuth, db } from '../firebase.config';
 import { Budget } from '../models/budget';
 
 @Injectable({ providedIn: 'root' })
 export class BudgetService {
-  private fs = inject(Firestore);
-  private auth = inject(Auth);
+  private zone = inject(NgZone);
 
   private get uid(): string {
-    const user = this.auth.currentUser;
+    const user = firebaseAuth.currentUser;
     if (!user) throw new Error('Not logged in');
     return user.uid;
   }
 
   private col() {
-    return collection(this.fs, `users/${this.uid}/budgets`);
+    return collection(db, `users/${this.uid}/budgets`);
   }
 
   getBudgets(): Observable<Budget[]> {
-    return collectionData(query(this.col(), orderBy('createdAt', 'desc')), {
-      idField: 'id',
-    }) as Observable<Budget[]>;
+    return new Observable<Budget[]>((sub) => {
+      let unsub: () => void = () => {};
+      let closed = false;
+
+      firebaseAuth.authStateReady().then(() => {
+        if (closed) return;
+        const q = query(this.col(), orderBy('createdAt', 'desc'));
+        unsub = onSnapshot(
+          q,
+          (snap) =>
+            this.zone.run(() =>
+              sub.next(snap.docs.map((d) => ({ id: d.id, ...d.data() }) as Budget))
+            ),
+          (err) => this.zone.run(() => sub.error(err))
+        );
+      }).catch((err) => sub.error(err));
+
+      return () => { closed = true; unsub(); };
+    });
   }
 
   addBudget(b: Budget) {
@@ -33,10 +48,10 @@ export class BudgetService {
   }
 
   updateBudget(id: string, changes: Partial<Budget>) {
-    return updateDoc(doc(this.fs, `users/${this.uid}/budgets/${id}`), changes);
+    return updateDoc(doc(db, `users/${this.uid}/budgets/${id}`), changes);
   }
 
   deleteBudget(id: string) {
-    return deleteDoc(doc(this.fs, `users/${this.uid}/budgets/${id}`));
+    return deleteDoc(doc(db, `users/${this.uid}/budgets/${id}`));
   }
 }

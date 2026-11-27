@@ -1,5 +1,71 @@
+.dashboard.page {
+  max-width: 960px;
+}
 
+/* ===== Stat boxes (horizontal, light green) ===== */
+.stats {
+  display: flex;
+  gap: 16px;
+  margin: 24px 0;
+}
 
+.stat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 20px;
+  border-radius: 12px;
+  background: #eaf5ee;
+  border: 1px solid #d3e8da;
+}
+
+.stat span {
+  font-size: 13px;
+  font-weight: 500;
+  color: #5f7d71;
+}
+
+.stat strong {
+  font-size: 24px;
+  font-weight: 600;
+  color: #204c3e;
+}
+
+.stat.over {
+  background: #fff0f0;
+  border-color: #f2d4d4;
+}
+
+.stat.over strong {
+  color: #c74747;
+}
+
+/* ===== Chart grid ===== */
+.chart-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.chart-card {
+  position: relative;
+  border: 1px solid #e0e4e1;
+  border-radius: 12px;
+  padding: 20px;
+  background: #ffffff;
+}
+
+.chart-card.wide {
+  grid-column: 1 / -1;
+}
+
+.chart-box {
+  position: relative;
+  height: 280px;
+}
+
+/* ===== Corner buttons ===== */
 .card-btn {
   position: absolute;
   top: 16px;
@@ -20,10 +86,51 @@
 .card-btn:hover {
   background: #183d31;
 }
-.chart-card {
-  position: relative;      
-  border: 1px solid #e0e4e1;
-  border-radius: 12px;
-  padding: 20px;
-  background: #ffffff;
+
+/* ===== Budget list inside the first card ===== */
+.budget-list {
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.budget-summary {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid #e0e4e1;
+}
+
+.budget-summary h4 {
+  margin: 0 0 8px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #204c3e;
+}
+
+/* ===== Small screens ===== */
+@media (max-width: 700px) {
+  .stats {
+    flex-wrap: wrap;
+  }
+  .stat {
+    flex: 1 1 calc(50% - 16px);
+  }
+  .chart-grid {
+    grid-template-columns: 1fr;
+  }
+}
+.page-header {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.page-header h2 {
+  margin: 0;
+}
+
+.greeting {
+  font-size: 18px;
+  font-weight: 500;
+  color: #5f7d71;
 }

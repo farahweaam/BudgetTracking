@@ -1,7 +1,7 @@
-import { Injectable, inject } from '@angular/core';
-import { Auth } from '@angular/fire/auth';
-import { Firestore, collection, collectionData } from '@angular/fire/firestore';
-import { Observable, combineLatest, map } from 'rxjs';
+import { Injectable, NgZone, inject } from '@angular/core';
+import { collection, onSnapshot } from 'firebase/firestore';
+import { Observable, combineLatest, from, map, switchMap } from 'rxjs';
+import { firebaseAuth, db } from '../firebase.config';
 import { Budget } from '../models/budget';
 import { Goal } from '../models/goal';
 import { Expense } from '../models/expense';
@@ -9,37 +9,48 @@ import { BudgetService } from './budget-service';
 import { GoalService } from './goal';
 
 export interface DashboardData {
-  budget: Budget | null;   // the most recent budget
+  budgets: Budget[];
   goals: Goal[];
   expenses: Expense[];
 }
 
 @Injectable({ providedIn: 'root' })
 export class DashboardService {
-  private fs = inject(Firestore);
-  private auth = inject(Auth);
+  private zone = inject(NgZone);
   private budgetService = inject(BudgetService);
   private goalService = inject(GoalService);
 
   getData(): Observable<DashboardData> {
-    const uid = this.auth.currentUser?.uid;
-    if (!uid) throw new Error('Not logged in');
+    // Wait for Firebase to restore the session before reading the user
+    return from(firebaseAuth.authStateReady()).pipe(
+      switchMap(() => {
+        const uid = firebaseAuth.currentUser?.uid;
+        if (!uid) throw new Error('Not logged in');
 
-    const expenses$ = collectionData(
-      collection(this.fs, `users/${uid}/expenses`),
-      { idField: 'id' }
-    ) as Observable<Expense[]>;
+        const expenses$ = new Observable<Expense[]>((sub) => {
+          const unsub = onSnapshot(
+            collection(db, `users/${uid}/expenses`),
+            (snap) =>
+              this.zone.run(() =>
+                sub.next(snap.docs.map((d) => ({ id: d.id, ...d.data() }) as Expense))
+              ),
+            (err) => this.zone.run(() => sub.error(err))
+          );
+          return unsub;
+        });
 
-    return combineLatest([
-      this.budgetService.getBudgets(),
-      this.goalService.getGoals(),
-      expenses$,
-    ]).pipe(
-      map(([budgets, goals, expenses]) => ({
-        budget: budgets[0] ?? null,   // getBudgets() is sorted newest first
-        goals,
-        expenses,
-      }))
+        return combineLatest([
+          this.budgetService.getBudgets(),
+          this.goalService.getGoals(),
+          expenses$,
+        ]).pipe(
+          map(([budgets, goals, expenses]): DashboardData => ({
+            budgets,
+            goals,
+            expenses,
+          }))
+        );
+      })
     );
   }
 }

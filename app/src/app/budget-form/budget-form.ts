@@ -5,6 +5,7 @@ import {
 import { Observable } from 'rxjs';
 import { Budget } from '../models/budget';
 import { BudgetService } from '../services/budget-service';
+import { Router } from '@angular/router';
 
 // Group-level validator: category limits must not exceed the income
 function limitsWithinIncome(group: AbstractControl): ValidationErrors | null {
@@ -25,6 +26,7 @@ function limitsWithinIncome(group: AbstractControl): ValidationErrors | null {
 export class BudgetForm implements OnInit {
   private fb = inject(FormBuilder);
   private budgetService = inject(BudgetService);
+  private router = inject(Router);
 
   budgets$!: Observable<Budget[]>;
   editingId: string | null = null;
@@ -78,7 +80,9 @@ export class BudgetForm implements OnInit {
       } else {
         await this.budgetService.addBudget(value);
       }
+     
       this.reset();
+      this.router.navigate(['/dashboard']);
     } catch (e: any) {
       this.errorMsg = e.message ?? 'Something went wrong';
     }

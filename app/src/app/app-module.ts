@@ -1,9 +1,5 @@
-
-import { NgModule, provideBrowserGlobalErrorListeners } from '@angular/core';
+import { NgModule, provideBrowserGlobalErrorListeners ,DEFAULT_CURRENCY_CODE} from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
-import { provideAuth, getAuth } from '@angular/fire/auth';
-import { provideFirestore, getFirestore } from '@angular/fire/firestore';
 import { environment } from '../environments/environment';
 
 import { AppRoutingModule } from './app-routing-module';
@@ -20,6 +16,7 @@ import { Register } from './components/register/register';
 import { Login } from './components/login/login';
 import { AuthLayout } from './components/auth-layout/auth-layout';
 import { ForgotPassword } from './components/forgot-password/forgot-password';
+import { Navbar } from './navbar/navbar';
 
 @NgModule({
   declarations: [
@@ -30,19 +27,14 @@ import { ForgotPassword } from './components/forgot-password/forgot-password';
     Register,
     Login,
     AuthLayout,
-    ForgotPassword
+    ForgotPassword,
+    Navbar,
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    ReactiveFormsModule
-  ],
+  imports: [BrowserModule, AppRoutingModule, ReactiveFormsModule],
   providers: [
-    provideBrowserGlobalErrorListeners(),
-    provideFirebaseApp(() => initializeApp(environment.firebase)),
-    provideAuth(() => getAuth()),
-    provideFirestore(() => getFirestore())
-  ],
+  provideBrowserGlobalErrorListeners(),
+  { provide: DEFAULT_CURRENCY_CODE, useValue: 'EGP' },
+],
   bootstrap: [App],
 })
 export class AppModule {}
